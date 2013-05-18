@@ -1,0 +1,118 @@
+// see http://www.gradle.org/docs/current/userguide/tutorial_java_projects.html
+apply plugin: 'java'
+
+// see http://www.gradle.org/docs/current/userguide/war_plugin.html
+apply plugin: 'war'
+
+// enables generation of eclipse project configurations
+apply plugin: 'eclipse'
+
+// see http://www.gradle.org/docs/current/userguide/sonar_runner_plugin.html
+apply plugin: 'sonar-runner'
+
+// see https://github.com/ben-manes/gradle-versions-plugin
+apply plugin: 'versions'
+
+
+group = 'demo'
+
+sourceCompatibility = '1.6'
+targetCompatibility = '1.6'
+
+/*
+// Enable and adapt if source path is not "src/main/java" and the web app is not in "src/main/webapp"
+sourceSets {
+	main {
+		java {
+			srcDir 'src/java'
+		}
+		resources {
+			srcDir 'src/resource'
+		}
+	}
+}
+
+// default folder when starting with eclipse
+//webAppDirName = 'WebContent'
+
+*/
+
+configurations {
+	// fetch all dependencies transitevly
+	compile.transitive = true
+
+	// if a project depends on apache commons logging, enable this line and include jcl-over-slf4j.
+	// we will include jcl-over-slf4j to enable logback as backend for components requiring the old-fashioned apache commons logging
+	// all*.exclude group: 'commons-logging', name: 'commons-logging'
+}
+
+repositories {
+	mavenCentral()
+}
+
+// Example dependency
+dependencies {
+	// logback is the "successor" of log4j
+	compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.0.13'
+
+	// enables usage of logback instead of commons-logging
+	// compile group: 'org.slf4j', name: 'jcl-over-slf4j', version: '1.7.2', transitive: false
+
+	// in case xlogger is required
+	// compile group:'org.slf4j', name:'slf4j-ext', version:'1.7.2'
+}
+
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+
+	dependencies {
+		// enables `gradlew dependencyUpdates -Drevision=release` showing possible updates on libraries
+		// see https://github.com/ben-manes/gradle-versions-plugin
+		classpath 'com.github.ben-manes:gradle-versions-plugin:0.3'
+	}
+}
+
+eclipse {
+	// setup your Java classpath variable GRADLE_USER_HOME to C:/users/<login>/.gradle
+	// we use GRADLE_USER_HOME instead of GRADLE_HOME, because this is also the environment variable honored by gradle: http://mrhaki.blogspot.de/2010/09/gradle-goodness-changing-gradle-user.html
+	pathVariables GRADLE_USER_HOME: gradle.gradleUserHomeDir
+}
+
+// add libraries to deployment assembly
+eclipse {
+	classpath {
+		file {
+			withXml {
+				def assembly = new Node(null, 'attributes')
+				assembly.appendNode(
+					'attribute',
+					[name: "org.eclipse.jst.component.dependency", value: "/WEB-INF/lib"],
+				null)
+
+				def node = it.asNode()
+				def children = node.children()
+				children.each {
+					def kind = it.attributes().get('kind')
+					// Modified from the original as we use GRADLE_USER_HOME
+					// We additionally require "lib" to ensure inclusion of libs in local m2 repository
+					if (kind != null && (kind == 'var' || kind =='lib')) {
+						// we need to skip servlet-api as it is provided by tomcat itself
+						def path = it.attributes().get('path')
+						if (!path.contains('javax.servlet-api')) {
+							it.append(assembly)
+						}
+					}
+				}
+			}
+		}
+		project {
+			//add wtp support
+			//by http://www.prait.ch/wordpress/?p=479 and http://www.prait.ch/wordpress/?p=469
+			natures 'org.eclipse.wst.common.project.facet.core.nature', 'org.eclipse.wst.common.modulecore.ModuleCoreNature'
+			buildCommand 'org.eclipse.wst.common.project.facet.core.builder'
+			buildCommand 'org.eclipse.wst.validation.validationbuilder'
+		}
+	}
+}
