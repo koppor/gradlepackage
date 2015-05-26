@@ -88,8 +88,8 @@ eclipse {
 				def assembly = new Node(null, 'attributes')
 				assembly.appendNode(
 					'attribute',
-					[name: "org.eclipse.jst.component.dependency", value: "/WEB-INF/lib"],
-				null)
+					[name: "org.eclipse.jst.component.dependency", value: "/WEB-INF/lib"]
+				)
 
 				def node = it.asNode()
 				def children = node.children()
