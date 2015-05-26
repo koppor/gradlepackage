@@ -143,3 +143,10 @@ eclipse {
 		}
 	}
 }
+
+// git support in intellij idea
+idea.project.ipr {
+	withXml { provider ->
+		provider.node.component.find { it.@name == 'VcsDirectoryMappings' }.mapping.@vcs = 'Git'
+	}
+}
