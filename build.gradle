@@ -10,9 +10,6 @@ apply plugin: 'war'
 // enables generation of eclipse project configurations via `gradlew eclipse`
 apply plugin: 'eclipse'
 
-// enables generation of IntelliJ project configuration via `gradlew idea`
-apply plugin: 'idea'
-
 // see http://www.gradle.org/docs/current/userguide/sonar_runner_plugin.html
 apply plugin: 'sonar-runner'
 
@@ -27,7 +24,7 @@ sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 
 // if using the application plugin
-// mainClassName = "org.gradle.sample.Main"
+// mainClassName = "HelloWorld"
 
 /*
 // Enable and adapt if source path is not "src/main/java" and the web app is not in "src/main/webapp"
@@ -44,6 +41,7 @@ sourceSets {
 
 // default folder when starting with eclipse
 //webAppDirName = 'WebContent'
+*/
 
 compileJava {
 	// files are all encoded using UTF-8
@@ -63,8 +61,6 @@ javadoc {
 		author = true
 	}
 }
-
-*/
 
 configurations {
 	// if a project depends on apache commons logging, enable this line and include jcl-over-slf4j below.
@@ -103,8 +99,8 @@ buildscript {
 
 eclipse {
 	// setup your Java classpath variable GRADLE_USER_HOME to C:/users/<login>/.gradle
-	// we use GRADLE_USER_HOME instead of GRADLE_HOME, because this is also the environment variable honored by gradle: http://mrhaki.blogspot.de/2010/09/gradle-goodness-changing-gradle-user.html
-	pathVariables GRADLE_USER_HOME: gradle.gradleUserHomeDir
+	// we use GRADLE_USER_HOME instead of GRADLE_HOME, because this is also the environment variable honoured by gradle: http://mrhaki.blogspot.de/2010/09/gradle-goodness-changing-gradle-user.html
+	// pathVariables GRADLE_USER_HOME: gradle.gradleUserHomeDir
 }
 
 // add libraries to deployment assembly
@@ -141,12 +137,5 @@ eclipse {
 			buildCommand 'org.eclipse.wst.common.project.facet.core.builder'
 			buildCommand 'org.eclipse.wst.validation.validationbuilder'
 		}
-	}
-}
-
-// git support in intellij idea
-idea.project.ipr {
-	withXml { provider ->
-		provider.node.component.find { it.@name == 'VcsDirectoryMappings' }.mapping.@vcs = 'Git'
 	}
 }
