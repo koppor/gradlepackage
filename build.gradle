@@ -11,7 +11,8 @@ apply plugin: 'war'
 apply plugin: 'eclipse'
 
 // see http://www.gradle.org/docs/current/userguide/sonar_runner_plugin.html
-apply plugin: 'sonar-runner'
+// not supported anymore
+// apply plugin: 'sonar-runner'
 
 // see https://github.com/ben-manes/gradle-versions-plugin
 apply plugin: 'com.github.ben-manes.versions'
