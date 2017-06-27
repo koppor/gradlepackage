@@ -147,8 +147,3 @@ eclipseJdt << {
     f.write('eclipse.preferences.version=1\n')
     f.append('encoding/<project>=UTF-8')
 }
-
-// enable wrapper genration - not necessary at all in other gradle files
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.7'
-}
