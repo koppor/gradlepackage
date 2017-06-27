@@ -1,3 +1,8 @@
+// see https://github.com/ben-manes/gradle-versions-plugin
+plugins {
+  id 'com.github.ben-manes.versions' version '0.15.0'
+}
+
 // see http://www.gradle.org/docs/current/userguide/tutorial_java_projects.html
 apply plugin: 'java'
 
@@ -13,9 +18,6 @@ apply plugin: 'eclipse'
 // see http://www.gradle.org/docs/current/userguide/sonar_runner_plugin.html
 // not supported anymore
 // apply plugin: 'sonar-runner'
-
-// see https://github.com/ben-manes/gradle-versions-plugin
-apply plugin: 'com.github.ben-manes.versions'
 
 group = 'demo'
 
@@ -83,19 +85,6 @@ dependencies {
 
 repositories {
 	jcenter()
-}
-
-buildscript {
-	repositories {
-		// jcenter instead of mavenCentral, because of com.github.ben-manes.versions
-		jcenter()
-	}
-
-	dependencies {
-		// enables `gradlew dependencyUpdates -Drevision=release` showing possible updates on libraries
-		// see https://github.com/ben-manes/gradle-versions-plugin
-		classpath 'com.github.ben-manes:gradle-versions-plugin:0.9'
-	}
 }
 
 eclipse {
